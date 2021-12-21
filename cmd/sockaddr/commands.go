@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/hashicorp/go-sockaddr/cmd/sockaddr/command"
+	"github.com/Hunter-Thompson/go-sockaddr/cmd/sockaddr/command"
 	"github.com/mitchellh/cli"
 )
 

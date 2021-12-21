@@ -3,7 +3,7 @@ package template_test
 import (
 	"testing"
 
-	socktmpl "github.com/hashicorp/go-sockaddr/template"
+	socktmpl "github.com/Hunter-Thompson/go-sockaddr/template"
 )
 
 func TestSockAddr_Parse(t *testing.T) {

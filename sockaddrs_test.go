@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	sockaddr "github.com/hashicorp/go-sockaddr"
+	sockaddr "github.com/Hunter-Thompson/go-sockaddr"
 )
 
 func init() {

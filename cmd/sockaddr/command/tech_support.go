@@ -4,11 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"net"
-	"os/exec"
 	"runtime"
 
 	"github.com/hashicorp/errwrap"
-	sockaddr "github.com/hashicorp/go-sockaddr"
 	"github.com/mitchellh/cli"
 )
 
@@ -62,11 +60,11 @@ func (c *TechSupportCommand) Run(args []string) int {
 		return 1
 	}
 
-	ri, err := sockaddr.NewRouteInfo()
-	if err != nil {
-		c.Ui.Error(fmt.Sprintf("error loading route information: %v", err))
-		return 1
-	}
+	// ri, err := sockaddr.NewRouteInfo()
+	// if err != nil {
+	// 	c.Ui.Error(fmt.Sprintf("error loading route information: %v", err))
+	// 	return 1
+	// }
 
 	const initNumCmds = 4
 	type cmdResult struct {
@@ -74,17 +72,17 @@ func (c *TechSupportCommand) Run(args []string) int {
 		out string
 	}
 	output := make(map[string]cmdResult, initNumCmds)
-	ri.VisitCommands(func(name string, cmd []string) {
-		out, err := exec.Command(cmd[0], cmd[1:]...).Output()
-		if err != nil {
-			out = []byte(fmt.Sprintf("ERROR: command %q failed: %v", name, err))
-		}
+	// ri.VisitCommands(func(name string, cmd []string) {
+	// 	out, err := exec.Command(cmd[0], cmd[1:]...).Output()
+	// 	if err != nil {
+	// 		out = []byte(fmt.Sprintf("ERROR: command %q failed: %v", name, err))
+	// 	}
 
-		output[name] = cmdResult{
-			cmd: cmd,
-			out: string(out),
-		}
-	})
+	// 	output[name] = cmdResult{
+	// 		cmd: cmd,
+	// 		out: string(out),
+	// 	}
+	// })
 
 	out := c.rowWriterOutputFactory()
 

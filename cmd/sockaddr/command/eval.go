@@ -8,8 +8,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/Hunter-Thompson/go-sockaddr/template"
 	"github.com/hashicorp/errwrap"
-	"github.com/hashicorp/go-sockaddr/template"
 	"github.com/mitchellh/cli"
 )
 

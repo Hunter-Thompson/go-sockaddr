@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"text/template"
 
+	sockaddr "github.com/Hunter-Thompson/go-sockaddr"
 	"github.com/hashicorp/errwrap"
-	sockaddr "github.com/hashicorp/go-sockaddr"
 )
 
 var (
@@ -35,7 +35,7 @@ func init() {
 		// GetDefaultInterfaces - Returns one IfAddr for every IP that
 		// is on the interface containing the default route for the
 		// host.
-		"GetDefaultInterfaces": sockaddr.GetDefaultInterfaces,
+		// "GetDefaultInterfaces": sockaddr.GetDefaultInterfaces,
 
 		// GetPrivateInterfaces - Returns one IfAddr for every IP that
 		// matches RFC 6890, are attached to the interface with the

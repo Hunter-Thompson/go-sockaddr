@@ -5,7 +5,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/hashicorp/go-sockaddr"
+	"github.com/Hunter-Thompson/go-sockaddr"
 )
 
 type GoodTestIPAddrTest struct {

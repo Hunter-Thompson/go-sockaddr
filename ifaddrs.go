@@ -112,28 +112,6 @@ func AscIfAddress(p1Ptr, p2Ptr *IfAddr) int {
 // N*log(N) where N = 3 is only ~6.2 invocations.  Not ideal, but not worth
 // optimizing today.  The common case is this gets called once or twice.
 // Patches welcome.
-func AscIfDefault(p1Ptr, p2Ptr *IfAddr) int {
-	ri, err := NewRouteInfo()
-	if err != nil {
-		return sortDeferDecision
-	}
-
-	defaultIfName, err := ri.GetDefaultInterfaceName()
-	if err != nil {
-		return sortDeferDecision
-	}
-
-	switch {
-	case p1Ptr.Interface.Name == defaultIfName && p2Ptr.Interface.Name == defaultIfName:
-		return sortDeferDecision
-	case p1Ptr.Interface.Name == defaultIfName:
-		return sortReceiverBeforeArg
-	case p2Ptr.Interface.Name == defaultIfName:
-		return sortArgBeforeReceiver
-	default:
-		return sortDeferDecision
-	}
-}
 
 // AscIfName is a sorting function to sort IfAddrs by their interface names.
 func AscIfName(p1Ptr, p2Ptr *IfAddr) int {
@@ -172,9 +150,9 @@ func DescIfAddress(p1Ptr, p2Ptr *IfAddr) int {
 }
 
 // DescIfDefault is identical to AscIfDefault but reverse ordered.
-func DescIfDefault(p1Ptr, p2Ptr *IfAddr) int {
-	return -1 * AscIfDefault(p1Ptr, p2Ptr)
-}
+// func DescIfDefault(p1Ptr, p2Ptr *IfAddr) int {
+// 	return -1 * AscIfDefault(p1Ptr, p2Ptr)
+// }
 
 // DescIfName is identical to AscIfName but reverse ordered.
 func DescIfName(p1Ptr, p2Ptr *IfAddr) int {
@@ -272,27 +250,27 @@ func GetAllInterfaces() (IfAddrs, error) {
 
 // GetDefaultInterfaces returns IfAddrs of the addresses attached to the default
 // route.
-func GetDefaultInterfaces() (IfAddrs, error) {
-	ri, err := NewRouteInfo()
-	if err != nil {
-		return nil, err
-	}
+// func GetDefaultInterfaces() (IfAddrs, error) {
+// 	ri, err := NewRouteInfo()
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	defaultIfName, err := ri.GetDefaultInterfaceName()
-	if err != nil {
-		return nil, err
-	}
+// 	defaultIfName, err := ri.GetDefaultInterfaceName()
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	var defaultIfs, ifAddrs IfAddrs
-	ifAddrs, err = GetAllInterfaces()
-	for _, ifAddr := range ifAddrs {
-		if ifAddr.Name == defaultIfName {
-			defaultIfs = append(defaultIfs, ifAddr)
-		}
-	}
+// 	var defaultIfs, ifAddrs IfAddrs
+// 	ifAddrs, err = GetAllInterfaces()
+// 	for _, ifAddr := range ifAddrs {
+// 		if ifAddr.Name == defaultIfName {
+// 			defaultIfs = append(defaultIfs, ifAddr)
+// 		}
+// 	}
 
-	return defaultIfs, nil
-}
+// 	return defaultIfs, nil
+// }
 
 // GetPrivateInterfaces returns an IfAddrs that are part of RFC 6890 and have a
 // default route.  If the system can't determine its IP address or find an RFC
@@ -330,7 +308,7 @@ func GetPrivateInterfaces() (IfAddrs, error) {
 		return IfAddrs{}, nil
 	}
 
-	OrderedIfAddrBy(AscIfDefault, AscIfType, AscIfNetworkSize).Sort(privateIfs)
+	// OrderedIfAddrBy(AscIfDefault, AscIfType, AscIfNetworkSize).Sort(privateIfs)
 
 	privateIfs, _, err = IfByRFC("6890", privateIfs)
 	if err != nil {
@@ -378,7 +356,7 @@ func GetPublicInterfaces() (IfAddrs, error) {
 		return IfAddrs{}, nil
 	}
 
-	OrderedIfAddrBy(AscIfDefault, AscIfType, AscIfNetworkSize).Sort(publicIfs)
+	// OrderedIfAddrBy(AscIfDefault, AscIfType, AscIfNetworkSize).Sort(publicIfs)
 
 	_, publicIfs, err = IfByRFC("6890", publicIfs)
 	if err != nil {
@@ -1045,9 +1023,9 @@ func SortIfBy(selectorParam string, inputIfAddrs IfAddrs) (IfAddrs, error) {
 		case "-address":
 			sortFuncs[i] = DescIfAddress
 		case "+default", "default":
-			sortFuncs[i] = AscIfDefault
-		case "-default":
-			sortFuncs[i] = DescIfDefault
+		// 	sortFuncs[i] = AscIfDefault
+		// case "-default":
+		// 	sortFuncs[i] = DescIfDefault
 		case "+name", "name":
 			// The "name" selector returns an array of IfAddrs
 			// ordered by the interface name.
@@ -1214,14 +1192,13 @@ func parseDefaultIfNameFromIPCmd(routeOut string) (string, error) {
 // Android.
 func parseDefaultIfNameFromIPCmdAndroid(routeOut string) (string, error) {
 	parsedLines := parseIfNameFromIPCmd(routeOut)
-	if (len(parsedLines) > 0) {
+	if len(parsedLines) > 0 {
 		ifName := strings.TrimSpace(parsedLines[0][4])
 		return ifName, nil
 	}
 
 	return "", errors.New("No default interface found")
 }
-
 
 // parseIfNameFromIPCmd parses interfaces from ip(8) for
 // Linux.
@@ -1259,7 +1236,7 @@ func parseDefaultIfNameWindows(routeOut, ipconfigOut string) (string, error) {
 // `netstat -rn`.
 //
 // NOTES(sean): Only IPv4 addresses are parsed at this time.  If you have an
-// IPv6 connected host, submit an issue on github.com/hashicorp/go-sockaddr with
+// IPv6 connected host, submit an issue on github.com/Hunter-Thompson/go-sockaddr with
 // the output from `netstat -rn`, `ipconfig`, and version of Windows to see IPv6
 // support added.
 func parseDefaultIPAddrWindowsRoute(routeOut string) (string, error) {

@@ -4,8 +4,8 @@ import (
 	"flag"
 	"fmt"
 
+	sockaddr "github.com/Hunter-Thompson/go-sockaddr"
 	"github.com/hashicorp/errwrap"
-	sockaddr "github.com/hashicorp/go-sockaddr"
 	"github.com/mitchellh/cli"
 	"github.com/ryanuber/columnize"
 )
